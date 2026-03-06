@@ -108,7 +108,7 @@ def andersen_thermostat(velocities, masses, temperature, nu, dt, kB=1.0, rng=Non
     
     Algorithm:
     1. For each particle i, generate random number r ~ U(0,1)
-    2. If r < (nu * dt), reassign velocity from MB distribution at T
+    2. If r < 1 - exp(-nu * dt), reassign velocity from MB distribution at T
     3. Otherwise, keep the current velocity
     
     Parameters
@@ -362,10 +362,10 @@ def berendsen_thermostat(velocities, masses, temperature, nu, dt, kB=1.0, remove
     # This preserves the velocity distribution shape but changes its width
     if remove_com and v_com is not None:
         # Add back COM velocity after rescaling
-        
+        velocities_new =(velocities - v_com) + v_com # This line needs to be fixed to properly rescale the velocities while preserving COM motion 
     else:
         # rescale all velocities
-    
+        velocities_new = velocities # This line needs to be fixed to properly rescale the velocities without COM removal
     return velocities_new
 
 def bussi_thermostat(velocities, masses, temperature, nu, dt, kB=1.0, 
